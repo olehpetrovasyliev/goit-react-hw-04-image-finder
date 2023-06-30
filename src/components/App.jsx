@@ -33,9 +33,11 @@ export const App = () => {
   useEffect(() => {
     if (!q) {
       return;
+    } else {
+      getData();
     }
-    getData();
   }, [q, page]);
+
   const handleBtnClick = () => {
     setPage(prev => prev + 1);
   };

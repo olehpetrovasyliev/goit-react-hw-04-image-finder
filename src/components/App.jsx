@@ -3,68 +3,52 @@ import { imagesApi } from 'services/apiGet';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
 import { Loader } from './Loader/Loader';
+import { useState, useCallback, useEffect } from 'react';
 
 export const App = () => {
-  // state = {
-  //   images: [],
-  //   page: 1,
-  //   q: '',
-  //   loading: false,
-  //   modalOpen: false,
-  //   showBtn: false,
-  // }; = state
+  const [q, setQ] = useState('');
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [images, setImages] = useState([]);
+  const [btn, setBtn] = useState(false);
 
-  //   fetchData = async () => {
-  //     const { page, q } = this.state;
+  const getData = async () => {
+    try {
+      setLoading(true);
+      const data = await imagesApi({ q, page });
+      setImages(prev => [...prev, ...data.data.hits]);
+      // console.log(data.data.hits);
+      page < Math.ceil(data.data.totalHits / 12) ? setBtn(true) : setBtn(false);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  //     try {
-  //       this.setState({ loading: true });
-  //       const data = await imagesApi({
-  //         q,
-  //         page,
-  //       });
-
-  //       this.setState(prev => ({
-  //         images: [...prev.images, ...data.data.hits],
-  //         showBtn: page < Math.ceil(data.data.totalHits / 12),
-  //       }));
-  //     } catch (err) {
-  //       console.log(err);
-  //     } finally {
-  //       this.setState({
-  //         loading: false,
-  //       });
-  //     }
-  //   };
-
-  //   handleChangeQuery = q => {
-  //     this.setState({ q, images: [], page: 1, loading: false, modalOpen: false });
-  //   }; us?
-
-  //   handleBtnClick = () => {
-  //     this.setState(prewState => ({
-  //       page: prewState.page + 1,
-  //     }));
-  //   };
-
-  //   componentDidUpdate = (_, prevState) => {
-  //     const { q, page } = this.state;
-  //     if (q !== prevState.q || page !== prevState.page) {
-  //       this.fetchData();
-  //     }
-  //   }; = useEffect
+  const handleChangeQuery = newQ => {
+    setImages([]);
+    setQ(newQ);
+  };
+  useEffect(() => {
+    if (!q) {
+      return;
+    }
+    getData();
+  }, [q, page]);
+  const handleBtnClick = () => {
+    setPage(prev => prev + 1);
+  };
 
   return (
     <>
       <Searchbar onSubmit={handleChangeQuery} />
 
-      <>
-        {loading && <Loader />}
+      {loading && <Loader />}
 
-        <ImageGallery arr={images} />
+      <ImageGallery arr={images} />
 
-        {showBtn && <Button cb={handleBtnClick} />}
-      </>
+      {btn && <Button cb={handleBtnClick} />}
     </>
   );
 };

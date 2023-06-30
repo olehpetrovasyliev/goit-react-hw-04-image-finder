@@ -1,5 +1,6 @@
 import css from './Modal.module.css';
 import { useEffect } from 'react';
+import propTypes from 'prop-types';
 
 export const Modal = ({ onClose, src, alt }) => {
   const handleOutsideClick = e => {
@@ -26,4 +27,10 @@ export const Modal = ({ onClose, src, alt }) => {
       </div>
     </div>
   );
+};
+
+Modal.propTypes = {
+  onClose: propTypes.func,
+  src: propTypes.string,
+  alt: propTypes.string,
 };

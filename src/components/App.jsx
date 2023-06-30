@@ -3,7 +3,7 @@ import { imagesApi } from 'services/apiGet';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
 import { Loader } from './Loader/Loader';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export const App = () => {
   const [q, setQ] = useState('');

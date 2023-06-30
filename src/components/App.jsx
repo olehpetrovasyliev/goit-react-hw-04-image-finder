@@ -14,6 +14,7 @@ export const App = () => {
 
   const handleChangeQuery = newQ => {
     setImages([]);
+    setPage(1);
     setQ(newQ);
   };
   useEffect(() => {
@@ -25,10 +26,8 @@ export const App = () => {
         setLoading(true);
         const data = await imagesApi({ q, page });
         setImages(prev => [...prev, ...data.data.hits]);
-        // console.log(data.data.hits);
-        page < Math.ceil(data.data.totalHits / 12)
-          ? setBtn(true)
-          : setBtn(false);
+
+        setBtn(page < Math.ceil(data.data.totalHits / 12));
       } catch (err) {
         console.log(err);
       } finally {

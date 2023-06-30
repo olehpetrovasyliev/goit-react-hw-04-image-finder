@@ -9,10 +9,8 @@ export const Modal = ({ onClose, src, alt }) => {
     }
   };
   useEffect(() => {
-    console.log(1);
     const closeOnEsc = e => {
       if (e.key === 'Escape') {
-        console.log('hello');
         onClose();
       }
     };

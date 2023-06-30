@@ -12,20 +12,6 @@ export const App = () => {
   const [images, setImages] = useState([]);
   const [btn, setBtn] = useState(false);
 
-  const getData = async () => {
-    try {
-      setLoading(true);
-      const data = await imagesApi({ q, page });
-      setImages(prev => [...prev, ...data.data.hits]);
-      // console.log(data.data.hits);
-      page < Math.ceil(data.data.totalHits / 12) ? setBtn(true) : setBtn(false);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleChangeQuery = newQ => {
     setImages([]);
     setQ(newQ);
@@ -33,9 +19,24 @@ export const App = () => {
   useEffect(() => {
     if (!q) {
       return;
-    } else {
-      getData();
     }
+    const getData = async () => {
+      try {
+        setLoading(true);
+        const data = await imagesApi({ q, page });
+        setImages(prev => [...prev, ...data.data.hits]);
+        // console.log(data.data.hits);
+        page < Math.ceil(data.data.totalHits / 12)
+          ? setBtn(true)
+          : setBtn(false);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getData();
   }, [q, page]);
 
   const handleBtnClick = () => {
